@@ -25,13 +25,17 @@ services:
   server:
     # build: server
     image: setre14/tff-hackathon-server:latest
+    pull_policy: always
     restart: always
+    ports:
+     - 8080:8080
     depends_on:
       - elasticsearch
 
   ui:
     # build: ui
     image: setre14/tff-hackathon-ui:latest
+    pull_policy: always
     restart: always
     ports:
      - 80:80

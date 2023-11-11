@@ -28,4 +28,4 @@ jobs:
           file: server/Dockerfile
           push: true
           # push: ${{ github.ref == 'refs/heads/main' }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tff-hackathon-ui:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tff-hackathon-server:latest
