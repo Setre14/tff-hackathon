@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active: dev
+elasticsearch:
+  url: localhost
