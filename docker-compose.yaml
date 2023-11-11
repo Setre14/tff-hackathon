@@ -21,6 +21,23 @@ services:
     volumes:
       - kibanadata:/usr/share/kibana/data
 
+
+  server:
+    # build: server
+    image: setre14/tff-hackathon-server:latest
+    restart: always
+    depends_on:
+      - elasticsearch
+
+  ui:
+    # build: ui
+    image: setre14/tff-hackathon-ui:latest
+    restart: always
+    ports:
+     - 80:80
+    depends_on:
+      - server
+    
 networks:
   elastic:
 
