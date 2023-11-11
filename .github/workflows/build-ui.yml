@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - "main"
-  pull_request:
-    branches:
-      - "main"
+  # pull_request:
+  #   branches:
+  #     - "main"
 
 jobs:
   build:
@@ -26,5 +26,6 @@ jobs:
         with:
           context: ui
           file: ui/Dockerfile
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: true
+          # push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tff-hackathon-server:latest
