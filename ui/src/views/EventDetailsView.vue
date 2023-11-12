@@ -3,6 +3,7 @@ import RevenueBarChartComponent from "@/components/RevenueBarChartComponent.vue"
 
 import {ref} from 'vue'
 import {useRoute} from "vue-router";
+import MasterCardIcon from "@/components/MasterCardIcon.vue";
 
 const route = useRoute();
 
@@ -10,6 +11,8 @@ const event = ref(null)
 const comparisonEvent = ref(null)
 const otherEvents = ref([])
 const showSelect = ref(false)
+const industries = ref([])
+const selectedIndustry = ref(null)
 
 const getData = async () => {
   await fetch(`http://localhost:8080/events/${route.params.name}`)
@@ -18,6 +21,14 @@ const getData = async () => {
 
   await fetch(`http://localhost:8080/events`)
       .then(res => res.json()).then((response) => otherEvents.value = response.filter(e => e.name != event.value.name))
+      .catch((error) => alert(error));
+
+  await fetch(`http://localhost:8080/revenue/industries`)
+      .then(res => res.json()).then((response) => {
+        industries.value = response
+        selectedIndustry.value = response[0]
+        console.log('set industries', industries.value)
+      })
       .catch((error) => alert(error));
 }
 
@@ -58,17 +69,28 @@ const setComparison = (event: any) => {
     <div class="content">
       <h1>{{event.displayName}}, {{new Date(event.eventDate).toDateString()}}{{comparisonEvent ? ` ⇔ ${comparisonEvent.displayName}, ${new Date(comparisonEvent.eventDate).toDateString()}`  : ''}}</h1>
       <div class="badgesContainer">
-        <p class="badge">Revenue Score: {{event.revenue}}%</p>
+        <p class="badge">Spend Score: {{event.revenue}}%</p>
         <p class="badge">Visitors: {{event.visitors}}</p>
         <span v-if="comparisonEvent" style="width: 50px"/>
-        <p v-if="comparisonEvent" class="badge otherBadge">Revenue Score: {{comparisonEvent.revenue}}%</p>
+        <p v-if="comparisonEvent" class="badge otherBadge">Spend Score: {{comparisonEvent.revenue}}%</p>
         <p v-if="comparisonEvent" class="badge otherBadge">Visitors: {{comparisonEvent.visitors}}</p>
       </div>
 
       <div class="stats" >
         <div class="card">
-          <h2 style="text-align: center; margin-bottom: 12px">Daily Revenue Score</h2>
+          <h2 style="text-align: center; margin-bottom: 12px">Daily Spend Score</h2>
+          <MasterCardIcon style="position: absolute; right: 24px; width: 48px; height: 48px"/>
           <RevenueBarChartComponent :event="event" :comparison-event="comparisonEvent" style="width: 500px; height: 300px"/>
+        </div>
+        <div class="card">
+          <h2 style="text-align: center; margin-bottom: 12px">Daily Spend Score</h2>
+          <MasterCardIcon style="position: absolute; right: 24px; width: 48px; height: 48px"/>
+          <RevenueBarChartComponent :event="event" :comparison-event="comparisonEvent" :industry="selectedIndustry" style="width: 500px; height: 300px"/>
+          <div class="industrySelect">
+            <select @change="(e) => selectedIndustry = e.target.value">
+              <option v-for="industry in industries" :value="industry">{{industry}}</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -76,6 +98,16 @@ const setComparison = (event: any) => {
 </template>
 
 <style scoped>
+.industrySelect {
+  position: absolute;
+  margin-top: 12px;
+  width: 200px;
+}
+
+.industrySelect > select {
+  width: 130px;
+}
+
 .image {
   width: 100%;
   height: 300px;
