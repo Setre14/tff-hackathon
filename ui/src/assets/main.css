@@ -12,12 +12,27 @@
   flex-flow: row wrap;
 }
 
-.badge {
+.badge, .greenBadge, .redBadge, .orangeBadge {
   background: #BFDBFE;
   padding: 4px 8px;
   border-radius: 24px;
   color: #2563EB;
   font-weight: 700;
+}
+
+.greenBadge {
+  background: #bef9d8;
+  color: #0F9F4F;
+}
+
+.redBadge {
+  background: #ffe1d7;
+  color: #FF5216;
+}
+
+.orangeBadge {
+  background: #fff2cf;
+  color: #F8B700;
 }
 
 .card {

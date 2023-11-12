@@ -41,7 +41,7 @@ const getImage = (name: string) => {
         <p>{{ new Date(event.eventDate).toDateString() }}</p>
         <div style="flex-grow: 1"/>
         <div class="badgesContainer">
-          <p class="badge">Spend Score: {{ event.revenue }}%</p>
+          <p :class="{ 'greenBadge': event.revenue >= 110, 'redBadge': event.revenue <= 90, 'orangeBadge': event.revenue > 90 && event.revenue < 110}">Spend Score: {{ event.revenue }}%</p>
           <p class="badge">Visitors: {{ event.visitors }}</p>
         </div>
       </div>
