@@ -7,12 +7,12 @@ import org.springframework.format.datetime.DateFormatterRegistrar;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
 
 import java.time.format.DateTimeFormatter;
 
 @Configuration
-public class SpringDateConfiguration extends WebMvcConfigurationSupport {
+public class SpringDateConfiguration extends DelegatingWebMvcConfiguration {
 
     @Bean
     @Override
