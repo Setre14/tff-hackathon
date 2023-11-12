@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Service
 public class RevenueService {
@@ -27,5 +28,18 @@ public class RevenueService {
         Stream<MastercardEntry> entries = mastercardRepository.findByTimestamp(date, Pageable.unpaged()).get();
         Double average = entries.mapToDouble(MastercardEntry::getTxnAmount).average().orElse(-1);
         return new RevenueData(average, date);
+    }
+
+    public RevenueData getRevenueScore(LocalDate date, String industry) {
+        Stream<MastercardEntry> entries = mastercardRepository.findByTimestampAndIndustry(date, industry, Pageable.unpaged()).get();
+        Double average = entries.mapToDouble(MastercardEntry::getTxnAmount).average().orElse(-1);
+        return new RevenueData(average, date);
+    }
+
+    public List<String> getIndustries() {
+        return StreamSupport.stream(mastercardRepository.findAll().spliterator(), false)
+                .map(MastercardEntry::getIndustry)
+                    .distinct()
+                .toList();
     }
 }

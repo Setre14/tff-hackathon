@@ -49,6 +49,16 @@ public class VisitorAnalyticsController {
     public Collection<RevenueData> getRevenueScoreData(@RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate from, @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate to) {
         List<LocalDate> allDates = DateUtil.getDatesBetween(from, to);
         return allDates.stream().map(date -> revenueService.getRevenueScore(date)).toList();
+    }
 
+    @GetMapping("revenue/industries")
+    public Collection<String> getPaymentCategories() {
+        return revenueService.getIndustries();
+    }
+
+    @GetMapping("revenue-score/industry")
+    public Collection<RevenueData> getRevenueScoreByIndustry(@RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate from, @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate to, @RequestParam String industry) {
+        List<LocalDate> allDates = DateUtil.getDatesBetween(from, to);
+        return allDates.stream().map(date -> revenueService.getRevenueScore(date, industry)).toList();
     }
 }

@@ -11,5 +11,5 @@ import java.time.LocalDate;
 public interface MastercardRepository extends ElasticsearchRepository<MastercardEntry, LocalDate> {
 
     Page<MastercardEntry> findByTimestamp(LocalDate name, Pageable pageable);
-
+    Page<MastercardEntry> findByTimestampAndIndustry(LocalDate name, String industry, Pageable pageable);
 }
