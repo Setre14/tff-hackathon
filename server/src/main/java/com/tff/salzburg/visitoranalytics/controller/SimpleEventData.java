@@ -1,18 +1,18 @@
 package com.tff.salzburg.visitoranalytics.controller;
 
+import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 
 public class SimpleEventData {
 
     private final String name;
     private final String displayName;
-    private final Date eventDate;
+    private final LocalDate eventDate;
     private final String weekday;
-    private final Double revenue;
+    private final Integer revenue;
     private final long visitors;
 
-    public SimpleEventData(String name, String displayName, Date eventDate, Double revenue, long visitors) {
+    public SimpleEventData(String name, String displayName, LocalDate eventDate, Integer revenue, long visitors) {
         this.name = name;
         this.displayName = displayName;
         this.eventDate = eventDate;
@@ -29,7 +29,7 @@ public class SimpleEventData {
         return displayName;
     }
 
-    public Date getEventDate() {
+    public LocalDate getEventDate() {
         return eventDate;
     }
 
@@ -37,7 +37,7 @@ public class SimpleEventData {
         return weekday;
     }
 
-    public Double getRevenue() {
+    public Integer getRevenue() {
         return revenue;
     }
 
@@ -45,19 +45,8 @@ public class SimpleEventData {
         return visitors;
     }
 
-    public static String getDayNumberOld(Date date) {
+    public static String getDayNumberOld(LocalDate date) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int weekday = cal.get(Calendar.DAY_OF_WEEK);
-        return switch (weekday) {
-            case 1 -> "Sunday";
-            case 2 -> "Monday";
-            case 3 -> "Tuesday";
-            case 4 -> "Wednesday";
-            case 5 -> "Thursday";
-            case 6 -> "Friday";
-            case 7 -> "Saturday";
-            default -> throw new IllegalStateException("Unknown weekday for " + date);
-        };
+        return date.getDayOfWeek().name();
     }
 }

@@ -18,10 +18,9 @@ public class DateUtil {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public static List<Date> getDatesBetween(Date startDate, Date endDate) {
-        return DateUtil.dateToLocalDate(startDate)
-                .datesUntil(DateUtil.dateToLocalDate(endDate))
-                .map(localDate -> DateUtil.localDateToDate(localDate))
+    public static List<LocalDate> getDatesBetween(LocalDate startDate, LocalDate endDate) {
+        return startDate
+                .datesUntil(endDate.plusDays(1)) // end is exclusive
                 .collect(Collectors.toList());
     }
 }
