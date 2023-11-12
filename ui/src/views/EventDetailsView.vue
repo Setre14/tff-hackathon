@@ -25,11 +25,14 @@ getData();
 
 const getImage = (name: string) => {
   switch (name) {
-    case "adidas-infinite-trails": return "https://infinite-trails.com/wp-content/uploads/2021/09/icorless_ait2021_-02312.jpg"
-    case "fis-snowboard-weltcup": return "https://www.gastein.com/uploads/tx_webxbookingemo/ImageStorage/SWC_a853ec2aceca7ebd59ddc51ec29ac435.jpg"
-    case "fis-snowboard-wc": return "https://www.gastein.com/uploads/tx_webxbookingemo/ImageStorage/SWC_a853ec2aceca7ebd59ddc51ec29ac435.jpg"
-    case "red-bull-playstreets": return "https://cdn.shopify.com/s/files/1/0666/7635/9400/t/3/assets/Red-Bull-Playstreets-Returns-1-1024x683.jpg?v=1678733489"
-    case "ski-classics": return "https://skiclassics.com/wp-content/uploads/2023/11/Stakston020423cm36259-1-scaled.jpg"
+    case "fis-snowboard-wc-2022-01-11": return "https://www.gastein.com/fileadmin/userdaten/bilder/Events/Winter/Snowboard_Worldcup/fis-snowboard-worldcup-3-gastein-winter-urlaub-berge-therme-salzburger-land-ski-amade-c-bad-gastein_simon-hutter-171.jpg"
+    case "ski-classics-2022-12-10": return "https://skiclassics.com/wp-content/uploads/2023/11/Stakston020423cm36259-1-scaled.jpg"
+    case "fis-snowboard-wc-2023-01-11": return "https://www.gastein.com/uploads/tx_webxbookingemo/ImageStorage/SWC_a853ec2aceca7ebd59ddc51ec29ac435.jpg"
+    case "fis-snowboard-wc-2023-01-10": return "https://www.gastein.com/uploads/tx_webxbookingemo/ImageStorage/SWC_a853ec2aceca7ebd59ddc51ec29ac435.jpg"
+    case "red-bull-play-streets-2023-02-10": return "https://cdn.shopify.com/s/files/1/0666/7635/9400/t/3/assets/Red-Bull-Playstreets-Returns-1-1024x683.jpg?v=1678733489"
+    case "ski-classics-2022-12-11": return "https://skiclassics.com/wp-content/uploads/2023/11/Stakston020423cm36259-1-scaled.jpg"
+    case "fis-snowboard-wc-2022-01-12": return "https://www.gastein.com/fileadmin/userdaten/bilder/Events/Winter/Snowboard_Worldcup/fis-snowboard-worldcup-3-gastein-winter-urlaub-berge-therme-salzburger-land-ski-amade-c-bad-gastein_simon-hutter-171.jpg"
+    case "adidas-infinite-trails-2022-09-10": return "https://infinite-trails.com/wp-content/uploads/2021/09/icorless_ait2021_-02312.jpg"
   }
 }
 
@@ -40,7 +43,7 @@ const setComparison = (event: any) => {
 </script>
 
 <template>
-  <div>
+  <div v-if="event">
     <button class="backButton" @click="$router.back">Back</button>
     <button class="compareButton" @click="showSelect = !showSelect">Compare</button>
     <button v-if="comparisonEvent" class="clearButton" @click="comparisonEvent = null">Clear selection</button>
@@ -48,25 +51,24 @@ const setComparison = (event: any) => {
       <p v-for="event in otherEvents" class="compareSelectItem" @click="setComparison(event)">{{event.displayName}}, {{new Date(event.eventDate).toDateString()}}</p>
     </div>
 
-    <img class="image"
+    <img
+        class="image"
          :src="getImage(event.name)"
          alt="Event Image"/>
     <div class="content">
       <h1>{{event.displayName}}, {{new Date(event.eventDate).toDateString()}}{{comparisonEvent ? ` ⇔ ${comparisonEvent.displayName}, ${new Date(comparisonEvent.eventDate).toDateString()}`  : ''}}</h1>
       <div class="badgesContainer">
-        <p class="badge">Revenue: {{event.revenue}}</p>
+        <p class="badge">Revenue Score: {{event.revenue}}%</p>
         <p class="badge">Visitors: {{event.visitors}}</p>
-        <p class="badge">Score: {{event.score}}</p>
         <span v-if="comparisonEvent" style="width: 50px"/>
-        <p v-if="comparisonEvent" class="badge otherBadge">Revenue: {{event.revenue}}</p>
-        <p v-if="comparisonEvent" class="badge otherBadge">Visitors: {{event.visitors}}</p>
-        <p v-if="comparisonEvent" class="badge otherBadge">Score: {{event.score}}</p>
+        <p v-if="comparisonEvent" class="badge otherBadge">Revenue Score: {{comparisonEvent.revenue}}%</p>
+        <p v-if="comparisonEvent" class="badge otherBadge">Visitors: {{comparisonEvent.visitors}}</p>
       </div>
 
       <div class="stats" >
         <div class="card">
-          <h2 style="text-align: center; margin-bottom: 12px">Revenue</h2>
-          <RevenueBarChartComponent :from="event.start" :to="event.end" style="width: 500px; height: 300px"/>
+          <h2 style="text-align: center; margin-bottom: 12px">Daily Revenue Score</h2>
+          <RevenueBarChartComponent :event="event" :comparison-event="comparisonEvent" style="width: 500px; height: 300px"/>
         </div>
       </div>
     </div>

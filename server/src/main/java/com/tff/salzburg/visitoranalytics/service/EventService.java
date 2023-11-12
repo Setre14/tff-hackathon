@@ -25,7 +25,7 @@ public class EventService {
     @Autowired
     private RevenueService revenueService;
 
-    public Collection<SimpleEventData> getEvents() {
+    public Collection<EventData> getEvents() {
         return StreamSupport.stream(eventRepository.findAll().spliterator(), false)
                 .map(this::entryToEventData)
                 .collect(Collectors.toList());
@@ -40,10 +40,11 @@ public class EventService {
         LocalDate localDate = entry.getTimestamp();
         LocalDate start = localDate.minusDays(daysBeforeEvent);
         LocalDate end = localDate.plusDays(daysAfterEvent);
-        Double revenue = DateUtil.getDatesBetween(start, end).stream()
+        Integer revenue = (int) DateUtil.getDatesBetween(start, end).stream()
                 .flatMap(date -> revenueService.getRevenue(date).stream())
                 .mapToDouble(RevenueData::getRevenue)
-                .sum();
+                .average()
+                .orElse(0);
         long visitors = 0; // TODO
         return new EventData(entry.getName(), entry.getDisplayName(), start, end, entry.getTimestamp(),
                 revenue, visitors);

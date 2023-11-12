@@ -9,10 +9,10 @@ public class SimpleEventData {
     private final String displayName;
     private final LocalDate eventDate;
     private final String weekday;
-    private final Double revenue;
+    private final Integer revenue;
     private final long visitors;
 
-    public SimpleEventData(String name, String displayName, LocalDate eventDate, Double revenue, long visitors) {
+    public SimpleEventData(String name, String displayName, LocalDate eventDate, Integer revenue, long visitors) {
         this.name = name;
         this.displayName = displayName;
         this.eventDate = eventDate;
@@ -37,7 +37,7 @@ public class SimpleEventData {
         return weekday;
     }
 
-    public Double getRevenue() {
+    public Integer getRevenue() {
         return revenue;
     }
 

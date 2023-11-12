@@ -20,8 +20,7 @@ public class DateUtil {
 
     public static List<LocalDate> getDatesBetween(LocalDate startDate, LocalDate endDate) {
         return startDate
-                .datesUntil(endDate)
-                .map(localDate -> localDate)
+                .datesUntil(endDate.plusDays(1)) // end is exclusive
                 .collect(Collectors.toList());
     }
 }

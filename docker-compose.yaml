@@ -23,15 +23,15 @@ services:
 
 
   server:
-    # build: server
-    image: setre14/tff-hackathon-server:latest
+    build: server
+    # image: setre14/tff-hackathon-server:latest
     pull_policy: always
     restart: always
     environment:
       SPRING_PROFILES_ACTIVE: prod
       ELASTICSEARCH_URL: elasticsearch
     ports:
-     - 8080:8080
+     - 8081:8080
     networks:
       - elastic
     depends_on:

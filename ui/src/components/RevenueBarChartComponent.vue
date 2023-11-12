@@ -1,27 +1,45 @@
 <script setup lang="ts">
 import {Bar} from 'vue-chartjs'
 import {BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip} from 'chart.js'
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 
-const props = defineProps(['from', 'to'])
+const props = defineProps(['event', 'comparisonEvent'])
 
-const revenue = ref([])
-
-const getData = () => {
-  console.log("request data")
-  console.log(new Date(props.from).toISOString())
-  console.log(new Date(props.to).toISOString())
-  fetch(`http://localhost:8080/revenue?from=${new Date(props.from).toISOString()}&to=${new Date(props.to).toISOString()}`)
+watch(() => props.comparisonEvent, () => {
+  console.log('watch')
+  loading.value = true;
+  if (!props.comparisonEvent) {
+    const datasets = chart.value.datasets
+    datasets.pop()
+    console.log(datasets)
+    chart.value.datasets = datasets
+    new Promise( resolve => setTimeout(resolve, 100)).then(() => loading.value = false)
+    return;
+  }
+  fetch(`http://localhost:8080/revenue-score?from=${new Date(props.comparisonEvent.start).toISOString()}&to=${new Date(props.comparisonEvent.end).toISOString()}`)
       .then(res => res.json()).then((response) => {
-    console.log(response)
-    revenue.value = response
+    const datasets = chart.value.datasets
+    if (datasets.length > 1)
+      datasets.pop()
+    datasets.push(
+        {
+          label: props.comparisonEvent.displayName,
+          backgroundColor: '#f8e1b1',
+          borderColor: '#eb8c25',
+          borderWidth: 2,
+          borderSkipped: false,
+          borderRadius: 2,
+          data: response.map(it => it.revenue)
+        });
+    chart.value.datasets = datasets
+    loading.value = false;
+    console.log('loaded comparison event data', datasets)
   })
       .catch((error) => alert(error));
-}
+});
 
-getData();
-
-const data = {
+const loading = ref(true)
+const chart = ref({
   labels: [
     '-5 Days',
     '-4 Days',
@@ -35,27 +53,34 @@ const data = {
     '+4 Days',
     '+5 Days',
   ],
-  datasets: [
-    {
-      label: 'Red Bull Play Streets',
-      backgroundColor: '#BFDBFE',
-      borderColor: '#2563EB',
-      borderWidth: 2,
-      borderSkipped: false,
-      borderRadius: 2,
-      data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-    },
+  datasets: []
+})
+
+const getData = () => {
+  fetch(`http://localhost:8080/revenue-score?from=${new Date(props.event.start).toISOString()}&to=${new Date(props.event.end).toISOString()}`)
+      .then(res => res.json()).then((response) => {
+    loading.value = false;
+    chart.value.datasets = [
       {
-        label: 'Other',
-        backgroundColor: '#f8e1b1',
-        borderColor: '#eb8c25',
+        label: props.event.displayName,
+        backgroundColor: '#BFDBFE',
+        borderColor: '#2563EB',
         borderWidth: 2,
         borderSkipped: false,
         borderRadius: 2,
-        data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
+        data: response.map(it => it.revenue)
       }
-  ]
+    ]
+  })
+      .catch((error) => alert(error));
 }
+
+getData();
+
+if (props.comparisonEvent) {
+  console.log("now?")
+}
+
 
 const options = {
   responsive: true,
@@ -67,5 +92,5 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 </script>
 
 <template>
-  <Bar :data="data" :options="options"/>
+  <Bar v-if="!loading" :data="chart" :options="options"/>
 </template>

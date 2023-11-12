@@ -27,7 +27,7 @@ public class VisitorAnalyticsController {
     }
 
     @GetMapping("events")
-    public Collection<SimpleEventData> getEvents() {
+    public Collection<EventData> getEvents() {
         return eventService.getEvents();
     }
 
@@ -43,5 +43,12 @@ public class VisitorAnalyticsController {
                 .filter(revenues -> !revenues.isEmpty())
                 .map(revenues -> revenues.get(0))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("revenue-score")
+    public Collection<RevenueData> getRevenueScoreData(@RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate from, @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate to) {
+        List<LocalDate> allDates = DateUtil.getDatesBetween(from, to);
+        return allDates.stream().map(date -> revenueService.getRevenueScore(date)).toList();
+
     }
 }

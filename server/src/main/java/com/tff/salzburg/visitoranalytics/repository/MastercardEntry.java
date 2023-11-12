@@ -18,10 +18,14 @@ public class MastercardEntry {
     @Field(name = "txn_amt")
     private final Double txnAmount;
 
-    public MastercardEntry(LocalDate timestamp, String industry, Double txnAmount) {
+    @Field(name = "quad_id")
+    private final Long quadId;
+
+    public MastercardEntry(LocalDate timestamp, String industry, Double txnAmount, Long quadId) {
         this.timestamp = timestamp;
         this.industry = industry;
         this.txnAmount = txnAmount;
+        this.quadId = quadId;
     }
 
     public LocalDate getTimestamp() {
@@ -34,5 +38,9 @@ public class MastercardEntry {
 
     public Double getTxnAmount() {
         return txnAmount;
+    }
+
+    public Long getQuadId() {
+        return quadId;
     }
 }

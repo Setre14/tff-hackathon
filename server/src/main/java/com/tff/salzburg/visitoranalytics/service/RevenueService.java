@@ -22,4 +22,10 @@ public class RevenueService {
         Stream<MastercardEntry> entries = mastercardRepository.findByTimestamp(date, Pageable.unpaged()).get();
         return entries.map(e -> new RevenueData(e.getTxnAmount(), e.getTimestamp())).collect(Collectors.toList());
     }
+
+    public RevenueData getRevenueScore(LocalDate date) {
+        Stream<MastercardEntry> entries = mastercardRepository.findByTimestamp(date, Pageable.unpaged()).get();
+        Double average = entries.mapToDouble(MastercardEntry::getTxnAmount).average().orElse(-1);
+        return new RevenueData(average, date);
+    }
 }

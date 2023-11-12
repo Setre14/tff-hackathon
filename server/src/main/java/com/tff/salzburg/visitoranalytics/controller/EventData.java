@@ -7,7 +7,7 @@ public class EventData extends SimpleEventData {
     private final LocalDate start;
     private final LocalDate end;
 
-    public EventData(String name, String displayName, LocalDate start, LocalDate end, LocalDate eventDate, Double revenue, long visitors) {
+    public EventData(String name, String displayName, LocalDate start, LocalDate end, LocalDate eventDate, Integer revenue, long visitors) {
         super(name, displayName, eventDate, revenue, visitors);
         this.start = start;
         this.end = end;
