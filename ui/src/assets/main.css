@@ -1,10 +1,40 @@
 @import './base.css';
 
 #app {
-  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
 
   font-weight: normal;
 }
 
+.badgesContainer {
+  display: flex;
+  gap: 8px;
+  flex-flow: row wrap;
+}
+
+.badge {
+  background: #BFDBFE;
+  padding: 4px 8px;
+  border-radius: 24px;
+  color: #2563EB;
+  font-weight: 700;
+}
+
+.card {
+  position: relative;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 32px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
+  transition: transform .5s ease;
+
+  padding: 12px 24px;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+}

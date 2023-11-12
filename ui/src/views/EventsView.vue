@@ -1,25 +1,49 @@
 <script setup lang="ts">
+import {ref} from 'vue'
+
+const events = ref([])
+
+const getData = () => {
+  fetch('http://localhost:8080/events')
+      .then(res => res.json()).then((response) => {
+    events.value = response
+  })
+      .catch((error) => {
+        alert(error)
+      });
+}
+
+getData();
+
+const getImage = (name: string) => {
+  switch (name) {
+    case "adidas-infinite-trails": return "https://infinite-trails.com/wp-content/uploads/2021/09/icorless_ait2021_-02312.jpg"
+    case "fis-snowboard-weltcup": return "https://www.gastein.com/uploads/tx_webxbookingemo/ImageStorage/SWC_a853ec2aceca7ebd59ddc51ec29ac435.jpg"
+    case "fis-snowboard-wc": return "https://www.gastein.com/uploads/tx_webxbookingemo/ImageStorage/SWC_a853ec2aceca7ebd59ddc51ec29ac435.jpg"
+    case "red-bull-playstreets": return "https://cdn.shopify.com/s/files/1/0666/7635/9400/t/3/assets/Red-Bull-Playstreets-Returns-1-1024x683.jpg?v=1678733489"
+    case "ski-classics": return "https://skiclassics.com/wp-content/uploads/2023/11/Stakston020423cm36259-1-scaled.jpg"
+  }
+}
 </script>
 
 <template>
   <input type="text" placeholder="Search.." class="search">
-
   <div class="container">
-    <div class="itemContainer">
+    <router-link v-for="event in events" class="card" :to="{ name: 'event', params: { name: event.name }}">
       <img class="image"
-           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsfW0S9NsXsSBxDdSgrJkxnjTR47XaBmphEg&usqp=CAU"
-           alt="Red Bull Play Streets"/>
+           :src="getImage(event.name)"
+           alt="Event Image"/>
       <div class="textContainer">
-        <h1>Red Bull Play Streets</h1>
-        <p>Saturday, 01.01.2022</p>
+        <h1>{{ event.displayName }}</h1>
+        <p>{{ new Date(event.eventDate).toDateString() }}</p>
         <div style="flex-grow: 1"/>
         <div class="badgesContainer">
-          <p class="badge">Revenue: +30%</p>
-          <p class="badge">Visitors: 7000</p>
-          <p class="badge">Score: 90</p>
+          <p class="badge">Revenue: {{ event.revenue }}</p>
+          <p class="badge">Visitors: {{ event.visitors }}</p>
+          <p class="badge">Score: {{ event.score }}</p>
         </div>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 
@@ -28,25 +52,15 @@
   display: flex;
   gap: 32px;
   flex-wrap: wrap;
+  margin: 0 64px;
 }
 
-.itemContainer {
-  position: relative;
-  box-sizing: border-box;
+.card {
   width: 48%;
-
-  display: flex;
   flex-direction: row;
-
-  border-radius: 32px;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-  transition: transform .5s ease;
+  padding: 0;
 }
 
-.itemContainer:hover {
-  transform: scale(1.02);
-  cursor: pointer;
-}
 
 .image {
   width: 200px;
@@ -63,19 +77,6 @@
   height: 100%;
 }
 
-.badgesContainer {
-  display: flex;
-  gap: 8px;
-  flex-flow: row wrap;
-}
-
-.badge {
-  background: #BFDBFE;
-  padding: 4px 8px;
-  border-radius: 24px;
-  color: #2563EB;
-  font-weight: 700;
-}
 
 .search {
   width: 70%;
@@ -86,5 +87,10 @@
   height: 48px;
   text-align: center;
   font-size: large;
+}
+
+a, a:visited {
+  text-decoration: none;
+  color: var(--color-text);
 }
 </style>
