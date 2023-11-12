@@ -4,7 +4,7 @@ WORKDIR /home/node/frontend
 
 COPY . .
 
-RUN npm ci && npm run build
+RUN npm ci && npm run build-only --production
 
 # ------
 FROM nginx
