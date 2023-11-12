@@ -52,7 +52,7 @@ I mean, Python was like created for those things
 
 > **_NOTE:_**  If you use a browser IDE, you will get a pop-up for the ports, if you use a local IDE, you can use localhost
 
-## Quickstaet - Local
+## Quickstart - Local
 
 - Clone the repository
 - Run `docker-compose up`
