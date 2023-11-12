@@ -13,6 +13,8 @@ const otherEvents = ref([])
 const showSelect = ref(false)
 const industries = ref([])
 const selectedIndustry = ref(null)
+const isHoliday = ref(false)
+const comparisonEventIsHoliday = ref(false)
 
 const getData = async () => {
   await fetch(`http://localhost:8080/events/${route.params.name}`)
@@ -28,6 +30,13 @@ const getData = async () => {
         industries.value = response
         selectedIndustry.value = response[0]
         console.log('set industries', industries.value)
+      })
+      .catch((error) => alert(error));
+
+  await fetch(`https://openholidaysapi.org/PublicHolidays?countryIsoCode=AT&languageIsoCode=DE&validFrom=${event.value.eventDate}&validTo=${event.value.eventDate}`)
+      .then(res => res.json()).then((response) => {
+        console.log(response.length)
+        isHoliday.value = response.length > 0
       })
       .catch((error) => alert(error));
 }
@@ -49,8 +58,24 @@ const getImage = (name: string) => {
 
 const setComparison = (event: any) => {
   comparisonEvent.value = event
+
+  if (comparisonEvent.value) {
+    fetch(`https://openholidaysapi.org/PublicHolidays?countryIsoCode=AT&languageIsoCode=DE&validFrom=${comparisonEvent.value.eventDate}&validTo=${comparisonEvent.value.eventDate}`)
+        .then(res => res.json()).then((response) => {
+          console.log(response.length)
+          isHoliday.value = response.length > 0
+        })
+        .catch((error) => alert(error));
+  }
+
   showSelect.value = false
 }
+
+const isWeekday = (event: any): boolean => {
+  const weekday = event.weekday
+  return weekday === 'FRIDAY' || weekday === 'SATURDAY' || weekday === 'SUNDAY'
+}
+
 </script>
 
 <template>
@@ -71,9 +96,14 @@ const setComparison = (event: any) => {
       <div class="badgesContainer">
         <p class="badge">Spend Score: {{event.revenue}}%</p>
         <p class="badge">Visitors: {{event.visitors}}</p>
+        <p class="badge">Weekend: <span v-if="isWeekday(event)">✔️</span>  <span v-if="!isWeekday(event)">❌</span></p>
+        <p class="badge">Holiday: <span v-if="isHoliday">✔️</span>  <span v-if="!isHoliday">❌</span></p>
+        
         <span v-if="comparisonEvent" style="width: 50px"/>
         <p v-if="comparisonEvent" class="badge otherBadge">Spend Score: {{comparisonEvent.revenue}}%</p>
         <p v-if="comparisonEvent" class="badge otherBadge">Visitors: {{comparisonEvent.visitors}}</p>
+        <p v-if="comparisonEvent" class="badge otherBadge">Weekend: <span v-if="isWeekday(comparisonEvent)">✔️</span>  <span v-if="!isWeekday(event)">❌</span></p>
+        <p v-if="comparisonEvent" class="badge otherBadge">Holiday: <span v-if="comparisonEventIsHoliday">✔️</span>  <span v-if="!isHoliday">❌</span></p>
       </div>
 
       <div class="stats" >
@@ -194,8 +224,10 @@ h1 {
   bottom: 80px;
   right: 24px;
   transition: transform .5s ease;
+  background: white;
   box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
   border-radius: 12px;
+  z-index: 1000;
 }
 
 .compareSelectItem {
