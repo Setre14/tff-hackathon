@@ -94,16 +94,16 @@ const isWeekday = (event: any): boolean => {
     <div class="content">
       <h1>{{event.displayName}}, {{new Date(event.eventDate).toDateString()}}{{comparisonEvent ? ` ⇔ ${comparisonEvent.displayName}, ${new Date(comparisonEvent.eventDate).toDateString()}`  : ''}}</h1>
       <div class="badgesContainer">
-        <p class="badge">Spend Score: {{event.revenue}}%</p>
+        <p :class="{ 'greenBadge': event.revenue >= 110, 'redBadge': event.revenue <= 90, 'orangeBadge': event.revenue > 90 && event.revenue < 110}">Spend Score: {{event.revenue}}%</p>
         <p class="badge">Visitors: {{event.visitors}}</p>
         <p class="badge">Weekend: <span v-if="isWeekday(event)">✔️</span>  <span v-if="!isWeekday(event)">❌</span></p>
         <p class="badge">Holiday: <span v-if="isHoliday">✔️</span>  <span v-if="!isHoliday">❌</span></p>
         
         <span v-if="comparisonEvent" style="width: 50px"/>
-        <p v-if="comparisonEvent" class="badge otherBadge">Spend Score: {{comparisonEvent.revenue}}%</p>
+        <p v-if="comparisonEvent" :class="{ 'greenBadge': event.revenue >= 110, 'redBadge': event.revenue <= 90, 'orangeBadge': event.revenue > 90 && event.revenue < 110}">Spend Score: {{comparisonEvent.revenue}}%</p>
         <p v-if="comparisonEvent" class="badge otherBadge">Visitors: {{comparisonEvent.visitors}}</p>
-        <p v-if="comparisonEvent" class="badge otherBadge">Weekend: <span v-if="isWeekday(comparisonEvent)">✔️</span>  <span v-if="!isWeekday(event)">❌</span></p>
-        <p v-if="comparisonEvent" class="badge otherBadge">Holiday: <span v-if="comparisonEventIsHoliday">✔️</span>  <span v-if="!isHoliday">❌</span></p>
+        <p v-if="comparisonEvent" class="badge otherBadge">Weekend: <span v-if="isWeekday(comparisonEvent)">✔️</span>  <span v-if="!isWeekday(comparisonEvent)">❌</span></p>
+        <p v-if="comparisonEvent" class="badge otherBadge">Holiday: <span v-if="comparisonEventIsHoliday">✔️</span>  <span v-if="!comparisonEventIsHoliday">❌</span></p>
       </div>
 
       <div class="stats" >
