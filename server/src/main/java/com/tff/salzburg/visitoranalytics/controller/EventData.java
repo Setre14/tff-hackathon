@@ -1,23 +1,23 @@
 package com.tff.salzburg.visitoranalytics.controller;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class EventData extends SimpleEventData {
 
-    private final Date start;
-    private final Date end;
+    private final LocalDate start;
+    private final LocalDate end;
 
-    public EventData(String name, String displayName, Date start, Date end, Date eventDate, Double revenue, long visitors) {
+    public EventData(String name, String displayName, LocalDate start, LocalDate end, LocalDate eventDate, Double revenue, long visitors) {
         super(name, displayName, eventDate, revenue, visitors);
         this.start = start;
         this.end = end;
     }
 
-    public Date getStart() {
+    public LocalDate getStart() {
         return start;
     }
 
-    public Date getEnd() {
+    public LocalDate getEnd() {
         return end;
     }
 }

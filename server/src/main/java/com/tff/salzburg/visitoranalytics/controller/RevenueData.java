@@ -1,12 +1,12 @@
 package com.tff.salzburg.visitoranalytics.controller;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class RevenueData {
     private final Double revenue;
-    private final Date date;
+    private final LocalDate date;
 
-    public RevenueData(Double revenue, Date date) {
+    public RevenueData(Double revenue, LocalDate date) {
         this.revenue = revenue;
         this.date = date;
     }
@@ -15,7 +15,7 @@ public class RevenueData {
         return revenue;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 }
