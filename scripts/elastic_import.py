@@ -11,6 +11,33 @@ def upload_csv_to_elasticsearch(csv_file_path, index_name):
         es.indices.delete(index=index_name)
     es.indices.create(
         index=index_name,
+        mappings={
+            'properties': {
+                '@timestamp': {'index': 'false', 'type': 'date'},
+
+                # Events
+                'Name': {'index': 'false', 'type': 'keyword'},
+                'KeyX': {'index': 'false', 'type': 'keyword'},
+                'Total Arriving Visitors': {'index': 'false', 'type': 'integer'},
+                'Total Departing Visitors': {'index': 'false', 'type': 'integer'},
+                'Average Stay Duration (minutes)': {'index': 'false', 'type': 'double'},
+                'Min Stay Duration (minutes)': {'index': 'false', 'type': 'double'},
+                'Max Stay Duration (minutes)': {'index': 'false', 'type': 'double'},
+                'Peak Visitor Time': {'index': 'false', 'type': 'text'},
+
+                # Mastercard
+                'industry': {'index': 'false', 'type': 'keyword'},
+                'quad_id': {'index': 'false', 'type': 'long'},
+                'txn_amt': {'index': 'false', 'type': 'double'},
+                'txn_cnt': {'index': 'false', 'type': 'double'},
+                'acct_cnt': {'index': 'false', 'type': 'double'},
+                'avg_ticket': {'index': 'false', 'type': 'double'},
+                'avg_freq': {'index': 'false', 'type': 'double'},
+                'avg_spend_amt': {'index': 'false', 'type': 'double'},
+                'yoy_txn_amt': {'index': 'false', 'type': 'double'},
+                'yoy_txn_cnt': {'index': 'false', 'type': 'double'},
+            }
+        }
     )
 
     with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
