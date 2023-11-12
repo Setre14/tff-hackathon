@@ -40,6 +40,12 @@ I mean, Python was like created for those things
 - Provides possibility to use SpringBoot
     - Nice integration for ElasticSearch
 
+#### OpenAPI - Swagger
+
+- Shows the API of the server under `http://localhost:8080/swagger-ui/index.html`
+    - documents the endpoints
+    - endpoints can be tried in the UI
+
 ### App - Typescript
 
 - Because why use JavaScript?
