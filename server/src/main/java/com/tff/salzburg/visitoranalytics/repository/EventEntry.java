@@ -18,11 +18,14 @@ public class EventEntry {
     private final String name;
     @Field(name = "Name")
     private final String displayName;
+    @Field(name = "Total Arriving Visitors")
+    private final long arrivingVisitors;
 
-    public EventEntry(LocalDate timestamp, String name, String displayName) {
+    public EventEntry(LocalDate timestamp, String name, String displayName, long arrivingVisitors) {
         this.timestamp = timestamp;
         this.name = name;
         this.displayName = displayName;
+        this.arrivingVisitors = arrivingVisitors;
     }
 
     public LocalDate getTimestamp() {
@@ -35,5 +38,9 @@ public class EventEntry {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public long getArrivingVisitors() {
+        return arrivingVisitors;
     }
 }

@@ -3,7 +3,6 @@ package com.tff.salzburg.visitoranalytics.service;
 import com.tff.salzburg.visitoranalytics.DateUtil;
 import com.tff.salzburg.visitoranalytics.controller.EventData;
 import com.tff.salzburg.visitoranalytics.controller.RevenueData;
-import com.tff.salzburg.visitoranalytics.controller.SimpleEventData;
 import com.tff.salzburg.visitoranalytics.repository.EventEntry;
 import com.tff.salzburg.visitoranalytics.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class EventService {
                 .mapToDouble(RevenueData::getRevenue)
                 .average()
                 .orElse(0);
-        long visitors = 0; // TODO
+        long visitors = eventRepository.findEventByName(entry.getName()).getArrivingVisitors();
         return new EventData(entry.getName(), entry.getDisplayName(), start, end, entry.getTimestamp(),
                 revenue, visitors);
     }
