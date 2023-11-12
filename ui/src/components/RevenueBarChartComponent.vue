@@ -3,27 +3,61 @@ import {Bar} from 'vue-chartjs'
 import {BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip} from 'chart.js'
 import {ref, watch} from 'vue'
 
-const props = defineProps(['event', 'comparisonEvent'])
+const props = defineProps(['event', 'comparisonEvent', 'industry'])
+
+watch(() => props.industry, () => {
+  loading.value = true;
+  const requestUrl = props.industry
+      ? `http://localhost:8080/revenue-score/industry?from=${new Date(props.event.start).toISOString()}&to=${new Date(props.event.end).toISOString()}&industry=${encodeURIComponent(props.industry)}`
+      : `http://localhost:8080/revenue-score?from=${new Date(props.event.start).toISOString()}&to=${new Date(props.event.end).toISOString()}`
+
+  fetch(requestUrl)
+      .then(res => res.json()).then((response) => {
+    const datasets = []
+    datasets.push(
+        {
+          label: props.industry ? `${props.event.displayName} (${props.industry})` : props.comparisonEvent.displayName,
+          backgroundColor: '#BFDBFE',
+          borderColor: '#2563EB',
+          borderWidth: 2,
+          borderSkipped: false,
+          borderRadius: 2,
+          data: response.map(it => it.revenue)
+        });
+    chart.value.datasets = datasets
+    loading.value = false;
+    loadComparision()
+  })
+      .catch((error) => alert(error));
+
+});
 
 watch(() => props.comparisonEvent, () => {
-  console.log('watch')
+  loadComparision()
+});
+
+const loadComparision = () => {
   loading.value = true;
   if (!props.comparisonEvent) {
     const datasets = chart.value.datasets
-    datasets.pop()
-    console.log(datasets)
+    if (datasets.length > 1)
+      datasets.pop()
     chart.value.datasets = datasets
     new Promise( resolve => setTimeout(resolve, 100)).then(() => loading.value = false)
     return;
   }
-  fetch(`http://localhost:8080/revenue-score?from=${new Date(props.comparisonEvent.start).toISOString()}&to=${new Date(props.comparisonEvent.end).toISOString()}`)
+  const requestUrl = props.industry
+      ? `http://localhost:8080/revenue-score/industry?from=${new Date(props.comparisonEvent.start).toISOString()}&to=${new Date(props.comparisonEvent.end).toISOString()}&industry=${encodeURIComponent(props.industry)}`
+      : `http://localhost:8080/revenue-score?from=${new Date(props.comparisonEvent.start).toISOString()}&to=${new Date(props.comparisonEvent.end).toISOString()}`
+
+  fetch(requestUrl)
       .then(res => res.json()).then((response) => {
     const datasets = chart.value.datasets
     if (datasets.length > 1)
       datasets.pop()
     datasets.push(
         {
-          label: props.comparisonEvent.displayName,
+          label: props.industry ? `${props.comparisonEvent.displayName} (${props.industry})` : props.comparisonEvent.displayName,
           backgroundColor: '#f8e1b1',
           borderColor: '#eb8c25',
           borderWidth: 2,
@@ -36,7 +70,7 @@ watch(() => props.comparisonEvent, () => {
     console.log('loaded comparison event data', datasets)
   })
       .catch((error) => alert(error));
-});
+}
 
 const loading = ref(true)
 const chart = ref({
@@ -57,12 +91,15 @@ const chart = ref({
 })
 
 const getData = () => {
-  fetch(`http://localhost:8080/revenue-score?from=${new Date(props.event.start).toISOString()}&to=${new Date(props.event.end).toISOString()}`)
+  const requestUrl = props.industry
+      ? `http://localhost:8080/revenue-score/industry?from=${new Date(props.event.start).toISOString()}&to=${new Date(props.event.end).toISOString()}&industry=${encodeURIComponent(props.industry)}`
+      : `http://localhost:8080/revenue-score?from=${new Date(props.event.start).toISOString()}&to=${new Date(props.event.end).toISOString()}`
+  fetch(requestUrl)
       .then(res => res.json()).then((response) => {
     loading.value = false;
     chart.value.datasets = [
       {
-        label: props.event.displayName,
+        label: props.industry ? `${props.event.displayName} (${props.industry}` : props.event.displayName,
         backgroundColor: '#BFDBFE',
         borderColor: '#2563EB',
         borderWidth: 2,
