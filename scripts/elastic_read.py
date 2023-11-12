@@ -3,8 +3,7 @@ import csv
 
 # Connect to Elasticsearch
 es = Elasticsearch(
-    ['https://localhost:9200'],
-    basic_auth=('elastic', 'Wh=h-WIPDyMNK2iX*N9='),
+    ['http://localhost:9200'],
     verify_certs=False,
     ssl_show_warn=False
 )
